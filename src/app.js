@@ -12,7 +12,7 @@ module.exports = (db) => {
      * @apiName GetUser
      * @apiGroup User
      *
-     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} Healthy Healthy status.
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK

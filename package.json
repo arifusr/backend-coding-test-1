@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
-    "preinstall": "npm install -g apidoc"
+    "preinstall": "npm install -g apidoc http-server",
+    "apidoc": "apidoc -i src/ -o doc/ && xdg-open http://localhost:8080 & http-server doc/"
   },
   "keywords": [
     "Xendit"
