@@ -9,25 +9,14 @@ const jsonParser = bodyParser.json();
 module.exports = (db) => {
     /**
      * @api {get} /health Request health information
-     * @apiName GetUser
-     * @apiGroup User
+     * @apiName GetHealth
+     * @apiGroup Health
      *
      * @apiSuccess {String} Healthy Healthy status.
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
-     *     {
-     *       "firstname": "John",
-     *       "lastname": "Doe"
-     *     }
-     *
-     * @apiError UserNotFound The id of the User was not found.
-     *
-     * @apiErrorExample Error-Response:
-     *     HTTP/1.1 404 Not Found
-     *     {
-     *       "error": "UserNotFound"
-     *     }
+     *     Healthy
      */
     app.get('/health', (req, res) => res.send('Healthy'));
 
