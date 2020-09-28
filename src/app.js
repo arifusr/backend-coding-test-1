@@ -17,9 +17,26 @@ module.exports = (db) => {
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     Healthy
+     * 
+     * @apiExample {curl} Example usage:
+     *      curl -i http://localhost:8010/health
      */
     app.get('/health', (req, res) => res.send('Healthy'));
 
+    /**
+     * @api {post} /rides Create new ride information
+     * @apiName PostRides
+     * @apiGroup Rides
+     *
+     * @apiSuccess {String} Healthy Healthy status.
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     Healthy
+     * 
+     * @apiExample {curl} Example usage:
+     *      curl -i http://localhost:8010/health
+     */
     app.post('/rides', jsonParser, (req, res) => {
         const startLatitude = Number(req.body.start_lat);
         const startLongitude = Number(req.body.start_long);
