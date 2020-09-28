@@ -5,6 +5,43 @@ const app = express();
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
+const { checkSchema, validationResult } = require('express-validator');
+
+const validator = (req, res, next)=>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.send(errors.array()[0].msg);
+    }
+    next()
+}
+
+const isExist = (name) => ({
+    options: (value, context) => {
+        if(value === undefined || value === null) {
+            throw {
+            error_code: 'VALIDATION_ERROR',
+            message: `${name} must be provided`}
+        }
+        return true;
+      
+    }
+  })
+
+const numbernotempty = (name)=> ({
+    in: 'body',
+    custom: isExist(name),
+    isInt: {
+        errorMessage: {
+            error_code: 'VALIDATION_ERROR',
+            message: `${name} must be integer`
+        }
+    }
+})
+
+const stringnotempty = (name)=> ({
+    in: 'body',
+    custom: isExist(name),
+})
 
 module.exports = (db) => {
     /**
@@ -14,7 +51,7 @@ module.exports = (db) => {
      *
      * @apiSuccess {String} Healthy Healthy status.
      *
-     * @apiSuccessExample Success-Response:
+     * @apiSuccessExample {String} Success-Response:
      *     HTTP/1.1 200 OK
      *     Healthy
      * 
@@ -27,8 +64,6 @@ module.exports = (db) => {
      * @api {post} /rides Create new ride information
      * @apiName PostRides
      * @apiGroup Rides
-     * 
-     * @api {post} /rides
      * @apiSchema (Body) {jsonschema=../.schema/rides.req.json} apiParam
      *
      * @apiExample {curl} Example usage:
@@ -46,8 +81,34 @@ module.exports = (db) => {
      *
      * @apiSchema {jsonschema=../.schema/rides.res.json} apiSuccess
      *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     *     [
+     *      {
+     *         "rideID": 1,
+     *         "startLat": 0,
+     *         "startLong": 0,
+     *         "endLat": 0,
+     *         "endLong": 0,
+     *         "riderName": "rider1",
+     *         "driverName": "driver1",
+     *         "driverVehicle": "driver_vehicle1",
+     *         "created": "2020-09-28 04:22:50"
+     *      }
+     *     ]
+     * 
+     * @apiError UserNotFound The <code>id</code> of the User was not found
      */
-    app.post('/rides', jsonParser, (req, res) => {
+    app.post('/rides', jsonParser, checkSchema({
+        start_lat: numbernotempty('start_lat'),
+        start_long: numbernotempty('start_long'),
+        end_lat: numbernotempty('end_lat'),
+        end_long: numbernotempty('end_long'),
+        rider_name: stringnotempty('rider_name'),   
+        driver_name: stringnotempty('driver_name'),
+        driver_vehicle: stringnotempty('driver_name')
+        
+      }), validator, (req, res) => {
         const startLatitude = Number(req.body.start_lat);
         const startLongitude = Number(req.body.start_long);
         const endLatitude = Number(req.body.end_lat);
