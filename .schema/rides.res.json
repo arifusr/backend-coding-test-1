@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Ride",
+    "description": "Ride information",
+    "type": "object",
+    "properties": {
+      "rideID": {
+        "description": "The unique identifier for a ride",
+        "type": "integer",
+        "required": true
+      },
+      "startLat": {
+        "description": "Start latitude of rider",
+        "type": "number",
+        "required": true
+      },
+      "startLong": {
+        "description": "Start longtitude of rider",
+        "type": "number",
+        "required": true
+      },
+      "endLat": {
+        "description": "End latitude of rider",
+        "type": "number",
+        "required": true
+      },
+      "riderName": {
+        "description": "Rider name",
+        "type": "string",
+        "required": true
+      },
+      "driverName": {
+        "description": "Driver name",
+        "type": "string",
+        "required": true
+      },
+      "driverVehicle": {
+        "description": "Driver vehicle",
+        "type": "string",
+        "required": true
+      },
+      "created": {
+        "description": "Date record created",
+        "format": "date-time",
+        "type": "string",
+        "required": true
+      }
+    },
+    "required": [ "productId", "productName", "price" ]
+  }

@@ -29,15 +29,9 @@ module.exports = (db) => {
      * @apiGroup Rides
      * 
      * @api {post} /rides
-     * @apiParam {Number} start_lat         Mandatory Start latitude of rider.
-     * @apiParam {Number} start_long        Mandatory Start longtitude of rider.
-     * @apiParam {Number} end_lat           Mandatory End latitude of rider.
-     * @apiParam {Number} end_long          Mandatory End longtitude of rider.
-     * @apiParam {String} rider_name        Mandatory Rider name.
-     * @apiParam {String} driver_name       Mandatory Driver name.
-     * @apiParam {String} driver_vehicle    Mandatory Driver vehicle.
+     * @apiSchema (Body) {jsonschema=../.schema/rides.req.json} apiParam
      *
-     *@apiExample {curl} Example usage:
+     * @apiExample {curl} Example usage:
      *     curl --location --request POST 'http://localhost:8010/rides' \
      *     --header 'Content-Type: application/json' \
      *     --data-raw '{
@@ -49,12 +43,8 @@ module.exports = (db) => {
      *     "driver_name":"driver1",
      *     "driver_vehicle":"driver_vehicle1"
      *     }'
-     * 
-     * @apiSuccess {String} Healthy Healthy status.
      *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     Healthy
+     * @apiSchema {jsonschema=../.schema/rides.res.json} apiSuccess
      *
      */
     app.post('/rides', jsonParser, (req, res) => {

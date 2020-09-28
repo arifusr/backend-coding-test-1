@@ -23,6 +23,7 @@
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
+    "apidoc-plugin-schema": "^0.1.8",
     "mocha": "^6.1.4",
     "supertest": "^4.0.2"
   }
