@@ -27,15 +27,35 @@ module.exports = (db) => {
      * @api {post} /rides Create new ride information
      * @apiName PostRides
      * @apiGroup Rides
+     * 
+     * @api {post} /rides
+     * @apiParam {Number} start_lat         Mandatory Start latitude of rider.
+     * @apiParam {Number} start_long        Mandatory Start longtitude of rider.
+     * @apiParam {Number} end_lat           Mandatory End latitude of rider.
+     * @apiParam {Number} end_long          Mandatory End longtitude of rider.
+     * @apiParam {String} rider_name        Mandatory Rider name.
+     * @apiParam {String} driver_name       Mandatory Driver name.
+     * @apiParam {String} driver_vehicle    Mandatory Driver vehicle.
      *
+     *@apiExample {curl} Example usage:
+     *     curl --location --request POST 'http://localhost:8010/rides' \
+     *     --header 'Content-Type: application/json' \
+     *     --data-raw '{
+     *     "start_lat":0,
+     *     "start_long":0,
+     *     "end_lat":0,
+     *     "end_long":0,
+     *     "rider_name": "rider1",
+     *     "driver_name":"driver1",
+     *     "driver_vehicle":"driver_vehicle1"
+     *     }'
+     * 
      * @apiSuccess {String} Healthy Healthy status.
      *
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      *     Healthy
-     * 
-     * @apiExample {curl} Example usage:
-     *      curl -i http://localhost:8010/health
+     *
      */
     app.post('/rides', jsonParser, (req, res) => {
         const startLatitude = Number(req.body.start_lat);
