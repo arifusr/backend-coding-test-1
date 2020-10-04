@@ -4,18 +4,25 @@
     "description": "Ride information",
     "type": "object",
     "properties": {
-      "startLat": {
+      "start_lat": {
         "description": "Start latitude of rider",
         "type": "number",
+        "minimum": -90,
+        "maximum": 90,
         "required": true
       },
-      "startLong": {
+      "start_long": {
         "description": "Start longtitude of rider",
         "type": "number",
         "required": true
       },
-      "endLat": {
+      "end_lat": {
         "description": "End latitude of rider",
+        "type": "number",
+        "required": true
+      },
+      "end_long": {
+        "description": "End longtitude of rider",
         "type": "number",
         "required": true
       },
