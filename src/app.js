@@ -1,6 +1,7 @@
 const express = require('express')
 
 const app = express()
+app.use(sqlinjection)
 
 const bodyParser = require('body-parser')
 
