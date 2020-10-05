@@ -9,6 +9,7 @@ const Validator = require('jsonschema').Validator
 const validator = new Validator()
 const ReqRiderSchema = require('../.schema/rides.req.json')
 const logger = require('./logger')
+const Joi = require('joi')
 
 module.exports = (db) => {
   /**
@@ -70,8 +71,8 @@ module.exports = (db) => {
     const { errors } = validator.validate(req.body, ReqRiderSchema)
     if (errors.length) {
       const errorMessage = errors.reduce((t, v) => { return t + `${v.property.replace('instance.', '')} ${v.message}; ` }, '')
-      return res.status(400).json({
-        error_code: 'SERVER_ERROR',
+      return res.send({
+        error_code: 'VALIDATION_ERROR',
         message: errorMessage
       })
     }
@@ -103,8 +104,17 @@ module.exports = (db) => {
   })
 
   app.get('/rides', jsonParser, (req, res) => {
-    const limit = req.query.limit ? `limit ${+req.query.limit}`:'';
-    const skip = req.query.page ? `offset ${+req.query.limit * (+req.query.page -1)}`:''
+    const schema = Joi.object({
+      limit: Joi.number().positive(),
+      page: Joi.number().positive()
+    })
+    const { error } = schema.validate(req.query)
+    if(error) return res.send({
+      error_ode: 'VALIDATION_ERROR',
+      message: error.message
+    })
+    const limit = req.query.limit ? `limit ${req.query.limit}`:'';
+    const skip = req.query.page ? `offset ${req.query.limit * (req.query.page -1)}`:''
     db.all(`SELECT * FROM Rides ${limit} ${skip}`, (err, rows) => {
       if (err) {
         logger.error(err.message)
