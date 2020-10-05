@@ -65,7 +65,7 @@ module.exports = (db) => {
      *      }
      *     ]
      *
-     * @apiError UserNotFound The <code>id</code> of the User was not found
+     * 
      */
   app.post('/rides', jsonParser, (req, res, next) => {
     const { errors } = validator.validate(req.body, ReqRiderSchema)
@@ -102,7 +102,40 @@ module.exports = (db) => {
       })
     })
   })
-
+ /**
+     * @api {get} /rides get collection of Rides
+     * @apiName GetRides
+     * @apiGroup Rides
+     * @apiParam {Number} limit limit pagination
+     * @apiParam {Number} page specify page to display
+     *
+     * @apiExample {curl} Example usage:
+     *     curl --location --request GET 'localhost:8010/rides?limit=2&page=-1'
+     *
+     * @apiSchema {jsonschema=../.schema/rides.res.json} apiSuccess
+     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *        "page": "1",
+     *        "total_page": 0.5,
+     *        "data": [
+     *            {
+     *                "rideID": 1,
+     *                "startLat": 20,
+     *                "startLong": 3000,
+     *                "endLat": 2,
+     *                "endLong": 2,
+     *                "riderName": "abc",
+     *                "driverName": "2wee",
+     *                "driverVehicle": "driver_vehicle1",
+     *                "created": "2020-10-05 01:17:23"
+     *            }
+     *        ]
+     *     }
+     *
+     * 
+     */
   app.get('/rides', jsonParser, (req, res) => {
     const schema = Joi.object({
       limit: Joi.number().positive(),
