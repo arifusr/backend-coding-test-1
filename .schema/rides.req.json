@@ -34,6 +34,8 @@
       "driver_name": {
         "description": "Driver name",
         "type": "string",
+        "minLength": 3,
+        "maxLength": 30,
         "required": true
       },
       "driver_vehicle": {
@@ -41,6 +43,5 @@
         "type": "string",
         "required": true
       }
-    },
-    "required": [ "productId", "productName", "price" ]
+    }
   }
