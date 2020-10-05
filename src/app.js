@@ -102,10 +102,12 @@ module.exports = (db) => {
     })
   })
 
-  app.get('/rides', (req, res) => {
-    db.all('SELECT * FROM Rides', (err, rows) => {
+  app.get('/rides', jsonParser, (req, res) => {
+    const limit = req.query.limit ? `limit ${+req.query.limit}`:'';
+    const skip = req.query.page ? `offset ${+req.query.limit * (+req.query.page -1)}`:''
+    db.all(`SELECT * FROM Rides ${limit} ${skip}`, (err, rows) => {
       if (err) {
-        logger.log(err)
+        logger.error(err.message)
         return res.send({
           error_code: 'SERVER_ERROR',
           message: 'Unknown error'
@@ -118,15 +120,37 @@ module.exports = (db) => {
           message: 'Could not find any rides'
         })
       }
+      const paginate = rows;
 
-      res.send(rows)
+      db.all(`SELECT * FROM Rides`,(err, rows)=>{
+        if (err) {
+          logger.error(err.message)
+          return res.send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error'
+          })
+        }
+  
+        if (rows.length === 0) {
+          return res.send({
+            error_code: 'RIDES_NOT_FOUND_ERROR',
+            message: 'Could not find any rides'
+          })
+        }
+        res.send({
+          page: req.query.page,
+          total_page: rows.length / req.query.limit,
+          data: paginate
+        })
+      })
+      
     })
   })
 
   app.get('/rides/:id', (req, res) => {
     db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, (err, rows) => {
       if (err) {
-        logger.log(err)
+        logger.error(err.message)
         return res.send({
           error_code: 'SERVER_ERROR',
           message: 'Unknown error'
