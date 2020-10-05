@@ -5,11 +5,10 @@ const app = express()
 const bodyParser = require('body-parser')
 
 const jsonParser = bodyParser.json()
-const Validator = require('jsonschema').Validator;
-const validator = new Validator();
+const Validator = require('jsonschema').Validator
+const validator = new Validator()
 const ReqRiderSchema = require('../.schema/rides.req.json')
-
-
+const logger = require('./logger')
 
 module.exports = (db) => {
   /**
@@ -69,9 +68,8 @@ module.exports = (db) => {
      */
   app.post('/rides', jsonParser, (req, res, next) => {
     const { errors } = validator.validate(req.body, ReqRiderSchema)
-    if(errors.length) {
-      const errorMessage = errors.reduce((t,v)=>{return t+`${v.property.replace('instance.','')} ${v.message}; `},"")
-      console.log(errorMessage)
+    if (errors.length) {
+      const errorMessage = errors.reduce((t, v) => { return t + `${v.property.replace('instance.', '')} ${v.message}; ` }, '')
       return res.status(400).json({
         error_code: 'SERVER_ERROR',
         message: errorMessage
@@ -83,6 +81,7 @@ module.exports = (db) => {
 
     db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
       if (err) {
+        logger.error(err.message)
         return res.send({
           error_code: 'SERVER_ERROR',
           message: 'Unknown error'
@@ -91,6 +90,7 @@ module.exports = (db) => {
 
       db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (err, rows) => {
         if (err) {
+          logger.error(err.message)
           return res.send({
             error_code: 'SERVER_ERROR',
             message: 'Unknown error'
@@ -105,6 +105,7 @@ module.exports = (db) => {
   app.get('/rides', (req, res) => {
     db.all('SELECT * FROM Rides', (err, rows) => {
       if (err) {
+        logger.log(err)
         return res.send({
           error_code: 'SERVER_ERROR',
           message: 'Unknown error'
@@ -125,6 +126,7 @@ module.exports = (db) => {
   app.get('/rides/:id', (req, res) => {
     db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, (err, rows) => {
       if (err) {
+        logger.log(err)
         return res.send({
           error_code: 'SERVER_ERROR',
           message: 'Unknown error'
