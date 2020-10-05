@@ -10,7 +10,9 @@
     "test": "mocha tests",
     "start": "node index.js",
     "preinstall": "npm install -g apidoc http-server",
-    "apidoc": "apidoc -i src/ -o doc/ && xdg-open http://localhost:8080 & http-server doc/"
+    "apidoc": "apidoc -i src/ -o doc/ && xdg-open http://localhost:8080 & http-server doc/",
+    "lint": "eslint ./ --fix",
+    "coverage": "nyc npm run test"
   },
   "keywords": [
     "Xendit"
@@ -20,12 +22,20 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.16.4",
-    "express-validator": "^6.6.1",
+    "jsonschema": "^1.2.8",
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
     "apidoc-plugin-schema": "^0.1.8",
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "mocha": "^6.1.4",
+    "nyc": "^15.1.0",
     "supertest": "^4.0.2"
   }
 }
