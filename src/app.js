@@ -82,7 +82,7 @@ module.exports = (db) => {
     try{
       const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle]
       console.log(req)
-      await new Promise((resolve, reject)=>{
+      const lastID = await new Promise((resolve, reject)=>{
         db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
           if (err) {
             logger.error(err.message)
@@ -91,11 +91,11 @@ module.exports = (db) => {
               message: 'Unknown error'
             })
           }
-          return resolve()
+          return resolve(this.lastID)
       })})
 
       const get = await new Promise((resolve,reject)=>{
-        db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (err, rows) => {
+        db.all('SELECT * FROM Rides WHERE rideID = ?', lastID, (err, rows) => {
           if (err) {
             logger.error(err.message)
             return reject({
