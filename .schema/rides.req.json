@@ -26,17 +26,17 @@
         "type": "number",
         "required": true
       },
-      "riderName": {
+      "rider_name": {
         "description": "Rider name",
         "type": "string",
         "required": true
       },
-      "driverName": {
+      "driver_name": {
         "description": "Driver name",
         "type": "string",
         "required": true
       },
-      "driverVehicle": {
+      "driver_vehicle": {
         "description": "Driver vehicle",
         "type": "string",
         "required": true
