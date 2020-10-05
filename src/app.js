@@ -1,7 +1,5 @@
 const express = require('express')
-const sqlinjection = require('sql-injection');
 const app = express()
-app.use(sqlinjection)
 
 const bodyParser = require('body-parser')
 
@@ -69,6 +67,7 @@ module.exports = (db) => {
      * 
      */
   app.post('/rides', jsonParser, (req, res, next) => {
+    console.log("aa")
     const { errors } = validator.validate(req.body, ReqRiderSchema)
     if (errors.length) {
       const errorMessage = errors.reduce((t, v) => { return t + `${v.property.replace('instance.', '')} ${v.message}; ` }, '')
@@ -77,31 +76,44 @@ module.exports = (db) => {
         message: errorMessage
       })
     }
+    console.log('a')
     return next()
-  }, (req, res) => {
-    const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle]
+  }, async(req, res)=> {
+    try{
+      const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle]
+      console.log(req)
+      await new Promise((resolve, reject)=>{
+        db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
+          if (err) {
+            logger.error(err.message)
+            return reject({
+              error_code: 'SERVER_ERROR',
+              message: 'Unknown error'
+            })
+          }
+          return resolve()
+      })})
 
-    db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
-      if (err) {
-        logger.error(err.message)
-        return res.send({
-          error_code: 'SERVER_ERROR',
-          message: 'Unknown error'
+      const get = await new Promise((resolve,reject)=>{
+        db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (err, rows) => {
+          if (err) {
+            logger.error(err.message)
+            return reject({
+              error_code: 'SERVER_ERROR',
+              message: 'Unknown error'
+            })
+          }
+
+          return resolve(rows)
         })
-      }
-
-      db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (err, rows) => {
-        if (err) {
-          logger.error(err.message)
-          return res.send({
-            error_code: 'SERVER_ERROR',
-            message: 'Unknown error'
-          })
-        }
-
-        res.send(rows)
       })
-    })
+      console.log(get)
+      res.send(get)
+    }catch(e){
+      res.send(e)
+    }
+  
+    
   })
  /**
      * @api {get} /rides get collection of Rides
