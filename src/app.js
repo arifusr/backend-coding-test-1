@@ -26,7 +26,7 @@ module.exports = (db) => {
      * @apiExample {curl} Example usage:
      *      curl -i http://localhost:8010/health
      */
-  app.get('/health', (req, res) => res.status(400).send('Healthy'))
+  app.get('/health', (req, res) => res.send('Healthy'))
 
   /**
      * @api {post} /rides Create new ride information
